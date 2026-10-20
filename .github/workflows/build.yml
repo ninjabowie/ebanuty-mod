@@ -1,0 +1,42 @@
+name: Build Ebanuty Mod
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.3'
+
+      - name: Extract project
+        run: |
+          ZIP_FILE=$(find . -maxdepth 1 -type f -name '*.zip' -print -quit)
+          test -n "$ZIP_FILE"
+          mkdir source
+          unzip -q "$ZIP_FILE" -d source
+
+      - name: Build mod
+        working-directory: source/ebanuty-mod
+        run: gradle build
+
+      - name: Upload mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: ebanuty-mod
+          path: source/ebanuty-mod/build/libs/*.jar
