@@ -31,7 +31,7 @@ jobs:
           mkdir source
           unzip -q "$ZIP_FILE" -d source
 
-            - name: Fix Loom repositories
+      - name: Fix Loom repositories
         working-directory: source/ebanuty-mod
         run: |
           sed -i 's/RepositoriesMode.PREFER_SETTINGS/RepositoriesMode.PREFER_PROJECT/' settings.gradle
